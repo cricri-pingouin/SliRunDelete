@@ -1,0 +1,9 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<BorlandProject>
+	<Transactions>
+    <Transaction>2019/01/14 20:03:09.044.pas,D:\Delphi projects\rundel\rundel.pas=D:\Delphi projects\rundel\unit1.pas</Transaction>
+    <Transaction>2019/01/14 20:03:09.044.dfm,D:\Delphi projects\rundel\rundel.dfm=D:\Delphi projects\rundel\unit1.dfm</Transaction>
+    <Transaction>2019/01/14 20:03:14.938.bdsproj,D:\Delphi projects\rundel\Projectrundel.bdsproj=D:\Delphi projects\rundel\rundel.bdsproj</Transaction>
+    <Transaction>2019/01/14 20:03:36.905.bdsproj,D:\Delphi projects\rundel\rundel.bdsproj=D:\Delphi projects\rundel\rundel.bdsproj</Transaction>
+  </Transactions>
+</BorlandProject>
