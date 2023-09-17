@@ -7,7 +7,7 @@ Runs a file, then allow to delete and/or power off the computer. Written to turn
 <br>OpenExtensions=*.mkv ; this is the extension of files to look for in the path above (e.g. *.* for any file type); directories are always ignored
 <br>DeletePermanently=1  ; if set to 1, pressing the "Delete" button will delete the file permanently, if set to 0 the file is sent to the recycle bin
 <br>AutoRun=1            ; if set to 1, the file is launched on startup, if set to 0 the file will only be launched if/when the "Run" button is pressed
-<br>AutoShutDown=0       ; if set to 1, the machined is powered down after the file is deleted, if set to 0 the machine will only be powered off if/when the "Power off" button is pressed
+<br>AutoShutDown=1       ; if set to 1, the machined is powered down after the file is deleted, if set to 0 the machine will only be powered off if/when the "Power off" button is pressed
 <br>
 <br><u>In the example above:</u>
 <br>The first .mkv file from the folder D:\Video will be opened automatically with MPC-HC when the app starts, then clicking the "Delete" button will permanently delete the .mkv file and immediately power off the machine thereafter.
