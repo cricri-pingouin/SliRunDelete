@@ -93,7 +93,7 @@ object MainForm: TMainForm
     Top = 72
     Width = 202
     Height = 26
-    Caption = 'Power off'
+    Caption = 'Shutdown'
     TabOrder = 2
     OnClick = btnPowerOffClick
   end

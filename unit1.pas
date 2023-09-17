@@ -27,7 +27,7 @@ type
     ExecutablePath: string;
     FilesPath: string;
     OpenExtensions: string;
-    DeletePermanently, AutoRun, AutoShutdown: Boolean;
+    AutoRun, RunAndExit, DeletePermanently, AutoShutdown: Boolean;
     //File to open
     FileName: string;
   end;
@@ -75,8 +75,9 @@ begin
   ExecutablePath := myINI.ReadString('Settings', 'ExecutablePath', 'D:\Utils\Video\Media Player Classic\mpc-be64.exe');
   FilesPath := myINI.ReadString('Settings', 'FilesPath', 'D:\');
   OpenExtensions := myINI.ReadString('Settings', 'Extensions', '*.mkv');
-  DeletePermanently := myINI.ReadBool('Settings', 'DeletePermanently', False);
   AutoRun := myINI.ReadBool('Settings', 'AutoRun', False);
+  RunAndExit := myINI.ReadBool('Settings', 'RunAndExit', False);
+  DeletePermanently := myINI.ReadBool('Settings', 'DeletePermanently', False);
   AutoShutDown := myINI.ReadBool('Settings', 'AutoShutdown', False);
   myINI.Free;
   //Run if AutoRun true
@@ -93,8 +94,9 @@ begin
   myINI.WriteString('Settings', 'ExecutablePath', ExecutablePath);
   myINI.WriteString('Settings', 'FilesPath', FilesPath);
   myINI.WriteString('Settings', 'OpenExtensions', OpenExtensions);
-  myINI.WriteBool('Settings', 'DeletePermanently', DeletePermanently);
   myINI.WriteBool('Settings', 'AutoRun', AutoRun);
+  myINI.WriteBool('Settings', 'RunAndExit', RunAndExit);
+  myINI.WriteBool('Settings', 'DeletePermanently', DeletePermanently);
   myINI.WriteBool('Settings', 'AutoShutDown', AutoShutDown);
   myINI.Free;
 end;
@@ -133,6 +135,8 @@ begin
     ShellExecute(0, 'open', PChar(ExecutablePath), PChar('"' + FilesPath + FileName + '"'), nil, SW_SHOWNORMAL)
   else
     ShellExecute(0, 'open', PChar('"' + FilesPath + FileName + '"'), nil, nil, SW_SHOWNORMAL);
+  if RunAndExit = True then
+    Application.Terminate;
   //Activate Delete button
   ActiveControl := btnDelete;
 end;
