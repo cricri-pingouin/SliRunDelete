@@ -3,8 +3,8 @@ unit unit1;
 interface
 
 uses
-  Windows, SysUtils, Forms, Dialogs, ShellApi, StdCtrls, Classes, Controls,
-  IniFiles, StrUtils;
+  Windows, SysUtils, Forms, ShellApi, StdCtrls, Classes, Controls, IniFiles,
+  StrUtils; //, Dialogs;
 
 type
   TMainForm = class(TForm)
@@ -12,10 +12,10 @@ type
     btnRun: TButton;
     btnDelete: TButton;
     procedure FormCreate(Sender: TObject);
-    procedure btnPowerOffClick(Sender: TObject);
+    procedure FormClose(Sender: TObject; var Action: TCloseAction);
     procedure btnRunClick(Sender: TObject);
     procedure btnDeleteClick(Sender: TObject);
-    procedure FormClose(Sender: TObject; var Action: TCloseAction);
+    procedure btnPowerOffClick(Sender: TObject);
     procedure RunMyFile();
     procedure DeleteMyFile();
     procedure ShutdownMyComputer();
@@ -24,13 +24,12 @@ type
   public
     { Public declarations }
     //Settings
-    //ExecutablePath: string;
+    ExecutablePath: string;
     FilesPath: string;
     OpenExtensions: string;
     DeletePermanently, AutoRun, AutoShutdown: Boolean;
     //File to open
     FileName: string;
-    FullPathName: PChar;
   end;
 
 var
@@ -70,29 +69,17 @@ end;
 procedure TMainForm.FormCreate(Sender: TObject);
 var
   myINI: TINIFile;
-  SRec: TSearchRec;
 begin
   //Initialise options from INI file
   myINI := TINIFile.Create(ExtractFilePath(Application.EXEName) + 'rundel.ini');
-  //ExecutablePath := myINI.ReadString('Settings', 'ExecutablePath', 'D:\Utils\Video\Media Player Classic\mpc-be64.exe');
+  ExecutablePath := myINI.ReadString('Settings', 'ExecutablePath', 'D:\Utils\Video\Media Player Classic\mpc-be64.exe');
   FilesPath := myINI.ReadString('Settings', 'FilesPath', 'D:\');
   OpenExtensions := myINI.ReadString('Settings', 'Extensions', '*.mkv');
   DeletePermanently := myINI.ReadBool('Settings', 'DeletePermanently', False);
   AutoRun := myINI.ReadBool('Settings', 'AutoRun', False);
   AutoShutDown := myINI.ReadBool('Settings', 'AutoShutdown', False);
   myINI.Free;
-  //Get first file
-  try
-    if FindFirst(PChar(FilesPath + OpenExtensions), faAnyfile, SRec) = 0 then
-      repeat
-        FileName := SRec.Name;
-      until (FindNext(SRec) <> 0) or (SRec.Size > 0);
-  finally
-    FindClose(SRec)
-  end;
-  if RightStr(FilesPath, 1) <> '\' then
-    FilesPath := FilesPath + '\';
-  FullPathName := PChar(FilesPath + FileName);
+  //Run if AutoRun true
   if AutoRun = True then
     RunMyFile();
 end;
@@ -103,7 +90,7 @@ var
 begin
   //Save settings to INI file
   myINI := TINIFile.Create(ExtractFilePath(Application.EXEName) + 'rundel.ini');
-  //myINI.WriteString('Settings', 'ExecutablePath', ExecutablePath);
+  myINI.WriteString('Settings', 'ExecutablePath', ExecutablePath);
   myINI.WriteString('Settings', 'FilesPath', FilesPath);
   myINI.WriteString('Settings', 'OpenExtensions', OpenExtensions);
   myINI.WriteBool('Settings', 'DeletePermanently', DeletePermanently);
@@ -128,29 +115,45 @@ begin
 end;
 
 procedure TMainForm.RunMyFile();
+var
+  SRec: TSearchRec;
 begin
-  ShellExecute(Handle, 'open', FullPathName, nil, nil, SW_SHOWNORMAL);
+  //Make sure path ends with \
+  if RightStr(FilesPath, 1) <> '\' then
+    FilesPath := FilesPath + '\';
+  //Get first file
+  try
+    if FindFirst(PChar(FilesPath + OpenExtensions), faAnyfile - faDirectory, SRec) = 0 then
+      FileName := SRec.Name;
+  finally
+    FindClose(SRec)
+  end;
+  //Execute file
+  if ExecutablePath <> '' then
+    ShellExecute(0, 'open', PChar(ExecutablePath), PChar('"' + FilesPath + FileName + '"'), nil, SW_SHOWNORMAL)
+  else
+    ShellExecute(0, 'open', PChar('"' + FilesPath + FileName + '"'), nil, nil, SW_SHOWNORMAL);
+  //Activate Delete button
   ActiveControl := btnDelete;
 end;
 
 procedure TMainForm.DeleteMyFile();
 begin
-  if fileexists(FullPathName) then
-  begin
+  if FileExists(FilesPath + FileName) then
     if DeletePermanently = False then
-      RecycleFile(FullPathName) //Send to Recycle Bin
+      RecycleFile(FilesPath + FileName) //Send to Recycle Bin
     else
-      DeleteFile(FullPathName); //Delete permanently
-  end;
-  //Shutdown if auto on
+      DeleteFile(FilesPath + FileName); //Delete permanently
+  //Activate Power off button
   ActiveControl := btnPowerOff;
+  //Shutdown if AutoShutdown true
   if AutoShutdown = True then
     ShutdownMyComputer();
 end;
 
 procedure TMainForm.ShutdownMyComputer();
 begin
-  ShellExecute(0, nil, 'cmd.exe', '/C shutdown /p', nil, SW_HIDE);
+  ShellExecute(0, nil, 'cmd.exe', '/c shutdown /p /f', nil, SW_HIDE);
   Close;
 end;
 
