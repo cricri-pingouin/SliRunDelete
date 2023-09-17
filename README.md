@@ -1,5 +1,5 @@
 # SliRunDelete
-Runs a file, then allow to delete and/or power off the computer. Written to trurn an old laptop into a media player that launches the first available video file, then delete it and power off the machine, hence watching the next video on next boot. Written in Turbo Delphi. 
+Runs a file, then allow to delete and/or power off the computer. Written to turn a PC into a media player that launches the first available video file, then delete it and power off the machine, hence playing the next video on next boot. Written in Turbo Delphi.
 <br>
 <br><u>INI file explanation:</u>
 <BR>ExecutablePath=C:\MPC\mpc-hc64.exe ; full path of app that will run the file; if none specified, ShellExecute will just open the file, which will thus be opened with whatever app is associated to the file type in Windows; in other words, this option is useful to either override the system default app, or if no app is associated with the file extension 
