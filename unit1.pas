@@ -74,7 +74,7 @@ begin
   myINI := TINIFile.Create(ExtractFilePath(Application.EXEName) + 'rundel.ini');
   ExecutablePath := myINI.ReadString('Settings', 'ExecutablePath', 'D:\Utils\Video\Media Player Classic\mpc-be64.exe');
   FilesPath := myINI.ReadString('Settings', 'FilesPath', 'D:\');
-  OpenExtensions := myINI.ReadString('Settings', 'Extensions', '*.mkv');
+  OpenExtensions := myINI.ReadString('Settings', 'OpenExtensions', '*.mkv');
   AutoRun := myINI.ReadBool('Settings', 'AutoRun', False);
   RunAndExit := myINI.ReadBool('Settings', 'RunAndExit', False);
   DeletePermanently := myINI.ReadBool('Settings', 'DeletePermanently', False);
